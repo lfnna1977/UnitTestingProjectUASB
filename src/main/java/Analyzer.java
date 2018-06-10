@@ -73,37 +73,36 @@ public class Analyzer {
      * Implementar el método allWords en la clase Analyzer
      */
     public static Set<Word> allWords(List<Sentence> sentences) {
-        Set<Word> listaPalabras = new TreeSet<Word>();
+        Set<Word> listWords = new TreeSet<Word>();
         /*
         * Leendo cada sentencia y colocando a la lista de palabras
         */
         System.out.println("... Leemos el contenido del archivo almacenado en ol objeto sentence.java ...");
         for (Sentence sentence : sentences) {
-            String[] palabras = sentence.text.split(" ");
-            for (String palabra : palabras) {
-                Word word = new Word(palabra.toLowerCase().trim());
-                listaPalabras.add(word);
-                System.out.println("Palabra leida " + word.getText());
+            String[] words = sentence.text.split(" ");
+            for (String word : words) {
+                Word readWord = new Word(word.toLowerCase().trim());
+                listWords.add(readWord);
+                System.out.println("Palabra leida " + readWord.getText());
             }
         }
         /*
         * Busca las palabras en las sentencias para asignarle el puntaje de la sentencia
         */
-        Integer numeroSentimiento = 0;
-        for (Word palabra : listaPalabras) {
-            String palabraBuscar = palabra.getText();
+        for (Word word : listWords) {
+            String findWord = word.getText();
             for (Sentence sentence : sentences) {
-                String[] palabras = sentence.text.split(" ");
-                for (String palabr : palabras) {
-                    if (palabraBuscar.equals(palabr.toLowerCase().trim())) {
-                        palabra.increaseTotal(sentence.getScore());
-                        System.out.println("Palabra " + palabra.getText() + ", puntaje " + palabra.getTotal());
+                String[] splitWords = sentence.text.split(" ");
+                for (String splitWord : splitWords) {
+                    if (findWord.equals(splitWord.toLowerCase().trim())) {
+                        word.increaseTotal(sentence.getScore());
+                        System.out.println("Palabra " + word.getText() + ", puntaje " + word.getTotal());
                     }
                 }
             }
-            numeroSentimiento = 0;
         }
-        return listaPalabras;
+        // Retornamos la lista de palabras
+        return listWords;
     }
 
     /*
@@ -112,8 +111,11 @@ public class Analyzer {
     public static Map<String, Double> calculateScores(Set<Word> words) {
         Map<String, Double> map = new HashMap<String, Double>();
         for (Word word: words) {
-            map.put(word.getText(), word.calculateScore());
+            double score = word.calculateScore();
+            map.put(word.getText(), score);
+            System.out.println("Palabra: " + word.getText() + ", puntuación calculada: " + score);
         }
+        // Retornamo el mapa
         return map;
     }
 
