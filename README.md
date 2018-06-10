@@ -1,4 +1,5 @@
 # UnitTestingProjectUASB
+[![Build Status](https://travis-ci.org/lfnna1977/UnitTestingProjectUASB.svg?branch=master)](https://travis-ci.org/lfnna1977/UnitTestingProjectUASB)
 
 ## TAREA FINAL.
 
