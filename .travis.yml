@@ -1,8 +1,4 @@
 language: java
+sudo: required
 jdk:
 - oraclejdk9
-
-before_script:
-- chmod a+x gradlew
-
-script: ./gradlew build
