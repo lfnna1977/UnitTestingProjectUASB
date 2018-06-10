@@ -12,58 +12,126 @@ import java.util.TreeSet;
 import org.junit.Test;
 
 public class AnalyzerTest {
+
     /*
+    * Método readFile de la clase Analyzer
+     */
+
+    // Test para verificar si existe el archivo
+    @Test
+    public void testFileExist() {
+        List<Sentence> list = new ArrayList<Sentence>();
+        list = Analyzer.readFile("file.txt");
+        assertTrue(!list.isEmpty());
+    }
+
+    // Test para verificar cuando no exista el archivo
+    @Test
+    public void testFileNotExist() {
+        List<Sentence> list = new ArrayList<Sentence>();
+        list = Analyzer.readFile("file_not_exist.txt");
+        assertTrue(list.isEmpty());
+    }
+
+    // Test para verificar que cuando el archivo esta vacio nos devuelva una lista vacia
     @Test
     public void testReadFileEmpty() {
-        List<Sentence> ListaVaciaResult=Analyzer.readFile("archivo.txt");
-        assertEquals(0, ListaVaciaResult.size());
+        List<Sentence> ListEmpty = Analyzer.readFile("empty_file.txt");
+        assertEquals("", 0, ListEmpty.size());
     }
 
+    /*
+    * Test para verificar que cuando en nuestro archivo haya filas que no cumplan
+    * el formato correcto no las lea del archivo
+     */
     @Test
-    public void testReadFileStringEntry() {
-        String nombreArchivo="archivo.txt";
-        String extencionArchivo=nombreArchivo.substring((nombreArchivo.length())-3, nombreArchivo.length());
-        assertTrue(extencionArchivo.equals("txt"));
+    public void testNotReadIncorrectFormat() {
+        List<Sentence> listIncorrectFormat = Analyzer.readFile("file_fake.txt");
+        assertEquals(3, listIncorrectFormat.size());
     }
 
+    /*
+     * Test para verificar que lea correctamente el numero de filas en el archivo y que cumplan
+     * con el formato establecido
+     */
     @Test
-    public void testReadReturnList6Elements() {
-        List<Sentence> ListaVaciaResult=Analyzer.readFile("archivo.txt");
-        assertEquals(6, ListaVaciaResult.size());
+    public void testReadCorrectFormat() {
+        List<Sentence> listCorrectFormat = Analyzer.readFile("file.txt");
+        assertEquals(6, listCorrectFormat.size());
     }
 
-    @Test
-    public void testAllWords() {
-        List<Sentence> Lista= new ArrayList<Sentence>();
-        Sentence sentence= new Sentence(5, "Web develop");
-        Lista.add(sentence);
-        Set<Word> ListaPalabrasResult=Analyzer.allWords(Lista);
-        assertEquals(2, ListaPalabrasResult.size());
-    }
+    /* Test para verificar que incluso si esta en el formato correcto puede q las sentencias
+    * uera de los limites de -2 a 2ç
     */
-
     @Test
-    public void testSomeLibraryMethod() {
-        //Sentence sentence = new Sentence();
-
-        List<Sentence> lista = new ArrayList<Sentence>();
-        lista = Analyzer.readFile("archivo.txt");
-
-        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+    public void testFormatoIncorrectoLimites() {
+        List<Sentence> lista = Analyzer.readFile("archivo_formato_limites.txt");
+        assertEquals(2, lista.size());
     }
 
+
+    /*
+     * Método allWords en la clase Analyzer
+     */
+
+    /*
+    * La cantidad de palabras dentro del archivo sea el correcto
+    * se considera que el no existen duplicados en las palabras
+    * y que todos estan en minusculas
+    */
     @Test
-    public void testSomeLibraryMethod1() {
+    public void testNumberWords() {
+        Set<Word> listWords = new TreeSet<Word>();
+        List<Sentence> list = new ArrayList<Sentence>();
+        list = Analyzer.readFile("file.txt");
+        listWords = Analyzer.allWords(list);
+        assertEquals(40, listWords.size());
+    }
+
+    /*
+    * La cantidad de apariciones que tiene la palabra en las diferentes
+    * sentencias dentro del archivo
+    */
+    @Test
+    public void testDatosCorrectos() {
+        Set<Word> listaPalabras = new TreeSet<Word>();
+        List<Sentence> lista = new ArrayList<Sentence>();
+        lista = Analyzer.readFile("file.txt");
+        listaPalabras = Analyzer.allWords(lista);
+
+        int count = 0;
+        for (Word palabra : listaPalabras) {
+            if("java".equals(palabra.getText())){
+                count = palabra.getCount();
+            }
+        }
+
+        assertEquals(2, count);
+    }
+
+    //acumulativo
+    @Test
+    public void testDatosCorrectosAcumulativo() { //FALLA
         Set<Word> listaPalabras = new TreeSet<Word>();
         List<Sentence> lista = new ArrayList<Sentence>();
         lista = Analyzer.readFile("archivo.txt");
         listaPalabras = Analyzer.allWords(lista);
 
-        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
+        int total = 0;
+        for (Word palabra : listaPalabras) {
+            if("java".equals(palabra.getText())){
+                total = palabra.getTotal();
+            }
+        }
+        assertEquals(4, total);
     }
 
+
+    /*
+     * Implement this method in Part 3
+     */
     @Test
-    public void testSomeLibraryMethod2() {
+    public void testScore() {
         Set<Word> listaPalabras = new TreeSet<Word>();
         List<Sentence> lista = new ArrayList<Sentence>();
         lista = Analyzer.readFile("archivo.txt");
@@ -72,22 +140,67 @@ public class AnalyzerTest {
         Map<String, Double> mapa = new HashMap<String, Double>();
         mapa = Analyzer.calculateScores(listaPalabras);
 
+        double score = 0;
         for (Map.Entry<String, Double> entry : mapa.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+            if ("fun".equals(entry.getKey())) {
+                score = entry.getValue();
+            }
         }
+        assertEquals("0.8", String.valueOf(score));
+    }
+
+    @Test
+    public void testMapaVacio() {
+        Set<Word> listaPalabras = new TreeSet<Word>();
+        List<Sentence> lista = new ArrayList<Sentence>();
+        lista = Analyzer.readFile("archivo_vacio.txt");
+        listaPalabras = Analyzer.allWords(lista);
+
+        Map<String, Double> mapa = new HashMap<String, Double>();
+        mapa = Analyzer.calculateScores(listaPalabras);
+
+
+        assertEquals(0, mapa.size());
+    }
+
+/*
+
+
+    @Test
+    public void testSomeLibraryMethod() {
+    	//Sentence sentence = new Sentence();
+    	List<Sentence> lista = new ArrayList<Sentence>();
+    	lista = Analyzer.readFile("archivo.txt");
+
         //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
     }
 
     @Test
-    public void testFormatoIncorrecto() {//FALLA, REVISAR
-        List<Sentence> lista = Analyzer.readFile("file_fake.txt");
-        assertEquals(3, lista.size());
+    public void testSomeLibraryMethod1() {
+    	Set<Word> listaPalabras = new TreeSet<Word>();
+    	List<Sentence> lista = new ArrayList<Sentence>();
+    	lista = Analyzer.readFile("archivo.txt");
+    	listaPalabras = Analyzer.allWords(lista);
+
+        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
     }
 
     @Test
-    public void testFormatoIncorrectoLimites() {
-        List<Sentence> lista = Analyzer.readFile("archivo_formato_limites.txt");
-        assertEquals(2, lista.size());
+    public void testSomeLibraryMethod2() {
+    	Set<Word> listaPalabras = new TreeSet<Word>();
+    	List<Sentence> lista = new ArrayList<Sentence>();
+    	lista = Analyzer.readFile("archivo.txt");
+    	listaPalabras = Analyzer.allWords(lista);
+
+    	Map<String, Double> mapa = new HashMap<String, Double>();
+    	mapa = Analyzer.calculateScores(listaPalabras);
+
+    	for (Map.Entry<String, Double> entry : mapa.entrySet()) {
+    		System.out.println(entry.getKey() + ": " + entry.getValue());
+    	}
+        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
     }
+    */
+
 
 }

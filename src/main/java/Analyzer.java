@@ -45,30 +45,28 @@ public class Analyzer {
                 * Significa que la línea empiece con un número en el rango de -2 a 2,
                 * tiene un espacio en blanco y luego una cadena.
                  */
-                Pattern patLinea = Pattern.compile("^[+-]?[0-2]{1}\\s{1}[a-zA-ZÀ-ÿ\\u00f1\\u00d1’'´` ]*$");
-                Matcher matLinea = patLinea.matcher(line);
+                Pattern patternLine = Pattern.compile("^[+-]?[0-2]{1}\\s{1}[a-zA-ZÀ-ÿ\\u00f1\\u00d1’'´` ]*$");
+                Matcher matcherLine = patternLine.matcher(line);
 
-                if (matLinea.find()) {
+                if (matcherLine.find()) {
                     Sentence sentence = new Sentence(Integer.valueOf(score), text);
                     listSentences.add(sentence);
                     System.out.println("Introducido: " + line);
                 }
             }
-
-        } catch (Exception ex) {
-            System.out.println("Mensaje: " + ex.getMessage());
+        } catch (Exception primaryException) {
+            System.out.println("Mensaje: " + primaryException.getMessage());
         } finally {
             // Cerramos el archivo si la lectura ha sido correcta o no lo ha sido
             try {
                 if (scanner != null)
                     scanner.close();
-            } catch (Exception ex2) {
-                System.out.println("Mensaje 2: " + ex2.getMessage());
+            } catch (Exception secondaryException) {
+                System.out.println("Mensaje: " + secondaryException.getMessage());
             }
         }
         // Retornamos la lista
         return listSentences;
-
     }
 
     /*
@@ -79,7 +77,7 @@ public class Analyzer {
         /*
         * Leendo cada sentencia y colocando a la lista de palabras
         */
-        System.out.println("mm.,m,.m,.m.");
+        System.out.println("... Leemos el contenido del archivo almacenado en ol objeto sentence.java ...");
         for (Sentence sentence : sentences) {
             String[] palabras = sentence.text.split(" ");
             for (String palabra : palabras) {
@@ -112,11 +110,11 @@ public class Analyzer {
      * Implementar el método calculateScores en la clase Analyzer.
      */
     public static Map<String, Double> calculateScores(Set<Word> words) {
-        Map<String, Double> mapa = new HashMap<String, Double>();
+        Map<String, Double> map = new HashMap<String, Double>();
         for (Word word: words) {
-            mapa.put(word.getText(), word.calculateScore());
+            map.put(word.getText(), word.calculateScore());
         }
-        return mapa;
+        return map;
     }
 
 }
