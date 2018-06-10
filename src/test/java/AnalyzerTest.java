@@ -130,20 +130,22 @@ public class AnalyzerTest {
 
 
     /*
-     * Implement this method in Part 3
-     */
-    @Test
-    public void testScore() {
-        Set<Word> listaPalabras = new TreeSet<Word>();
-        List<Sentence> lista = new ArrayList<Sentence>();
-        lista = Analyzer.readFile("archivo.txt");
-        listaPalabras = Analyzer.allWords(lista);
+    * Método calculateScores en la clase Analyzer
+    */
 
-        Map<String, Double> mapa = new HashMap<String, Double>();
-        mapa = Analyzer.calculateScores(listaPalabras);
+    // Se testea que salga el score correcto de una palabra en concreto
+    @Test
+    public void test_calculateScores_Score() {
+        Set<Word> listWords = new TreeSet<Word>();
+        List<Sentence> list = new ArrayList<Sentence>();
+        list = Analyzer.readFile("file.txt");
+        listWords = Analyzer.allWords(list);
+
+        Map<String, Double> map = new HashMap<String, Double>();
+        map = Analyzer.calculateScores(listWords);
 
         double score = 0;
-        for (Map.Entry<String, Double> entry : mapa.entrySet()) {
+        for (Map.Entry<String, Double> entry : map.entrySet()) {
             if ("fun".equals(entry.getKey())) {
                 score = entry.getValue();
             }
@@ -151,58 +153,21 @@ public class AnalyzerTest {
         assertEquals("0.8", String.valueOf(score));
     }
 
-    @Test
-    public void testMapaVacio() {
-        Set<Word> listaPalabras = new TreeSet<Word>();
-        List<Sentence> lista = new ArrayList<Sentence>();
-        lista = Analyzer.readFile("archivo_vacio.txt");
-        listaPalabras = Analyzer.allWords(lista);
-
-        Map<String, Double> mapa = new HashMap<String, Double>();
-        mapa = Analyzer.calculateScores(listaPalabras);
-
-
-        assertEquals(0, mapa.size());
-    }
-
-/*
-
-
-    @Test
-    public void testSomeLibraryMethod() {
-    	//Sentence sentence = new Sentence();
-    	List<Sentence> lista = new ArrayList<Sentence>();
-    	lista = Analyzer.readFile("archivo.txt");
-
-        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
-    }
-
-    @Test
-    public void testSomeLibraryMethod1() {
-    	Set<Word> listaPalabras = new TreeSet<Word>();
-    	List<Sentence> lista = new ArrayList<Sentence>();
-    	lista = Analyzer.readFile("archivo.txt");
-    	listaPalabras = Analyzer.allWords(lista);
-
-        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
-    }
-
-    @Test
-    public void testSomeLibraryMethod2() {
-    	Set<Word> listaPalabras = new TreeSet<Word>();
-    	List<Sentence> lista = new ArrayList<Sentence>();
-    	lista = Analyzer.readFile("archivo.txt");
-    	listaPalabras = Analyzer.allWords(lista);
-
-    	Map<String, Double> mapa = new HashMap<String, Double>();
-    	mapa = Analyzer.calculateScores(listaPalabras);
-
-    	for (Map.Entry<String, Double> entry : mapa.entrySet()) {
-    		System.out.println(entry.getKey() + ": " + entry.getValue());
-    	}
-        //assertTrue("someLibraryMethod should return 'true'", classUnderTest.someLibraryMethod());
-    }
+    /*
+    * Si el conjunto de palabras de entrada es nulo o está vacío, el método calculateScores
+    * debe devolver un mapa vacío.
     */
+    @Test
+    public void test_calculateScores_emptyMap() {
+        Set<Word> listWords = new TreeSet<Word>();
+        List<Sentence> list = new ArrayList<Sentence>();
+        list = Analyzer.readFile("file_empty.txt");
+        listWords = Analyzer.allWords(list);
 
+        Map<String, Double> map = new HashMap<String, Double>();
+        map = Analyzer.calculateScores(listWords);
+
+        assertEquals(0, map.size());
+    }
 
 }
